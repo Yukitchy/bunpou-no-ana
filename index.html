@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FBFAF6' stroke='%23C93A25' stroke-width='4'/%3E%3Ctext x='32' y='45' font-size='38' font-weight='900' text-anchor='middle' fill='%23C93A25' font-family='sans-serif'%3E%E7%A9%B4%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<title>Darrenさんの文法の穴</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
+<style>
+/* 方眼ノートに赤ペンで添削。左に穴の名前とルール、右に本人の文。色は墨と朱だけ。単一ライトテーマ */
+:root{
+  --paper:#FBFAF6;
+  --grid:rgba(52,84,120,.055);
+  --ink:#1D2226;
+  --sub:#5C646B;
+  --line:#DAD6CC;
+  --red:#C93A25;
+  --font-jp:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background-color:var(--paper);color:var(--ink);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  font-family:var(--font-jp);font-size:17px;line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+}
+body{word-break:keep-all;line-break:strict;overflow-wrap:break-word}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+ol,ul{margin:0;padding:0;list-style:none}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.wrap{max-width:1120px;margin:0 auto;padding-inline:32px}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--font-mono);font-weight:500;letter-spacing:.02em}
+.en{color:var(--sub);font-size:15px;line-height:1.65}
+
+/* hero */
+.hero{padding-block:104px 72px}
+.hero .who{font-size:15px;font-weight:700;color:var(--sub);letter-spacing:.06em}
+.hero h1{white-space:nowrap;font-size:clamp(48px,11vw,128px);font-weight:900;line-height:1.02;letter-spacing:-.02em;margin-top:20px}
+.hero .lead{max-width:34em;font-size:19px;margin-top:36px}
+.hero .en{max-width:40em;margin-top:12px}
+.facts{display:flex;flex-wrap:wrap;gap:12px 48px;margin-top:48px;padding-top:24px;border-top:2px solid var(--ink)}
+.facts div{display:flex;align-items:baseline;gap:6px}
+.facts b{font-size:34px;font-weight:900;line-height:1}
+.facts span{font-size:15px;color:var(--sub)}
+.toc{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:28px;font-size:15px;font-weight:700}
+.toc a{text-decoration:none;display:inline-flex;gap:8px;align-items:baseline;padding-block:4px;border-bottom:1px solid transparent}
+.toc a:hover{border-bottom-color:var(--ink)}
+.toc .n{font-family:var(--font-mono);color:var(--sub)}
+
+/* sections */
+section{padding-block:88px;border-top:1px solid var(--line)}
+.sec-h{font-size:clamp(28px,3.4vw,38px);font-weight:900;line-height:1.35}
+.sec-lead{max-width:36em;margin-top:16px}
+
+/* できていること */
+.good{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 64px;margin-top:48px}
+.good li{min-width:0;display:grid;gap:8px;align-content:start}
+.good .meta{display:flex;gap:14px;align-items:baseline;font-size:14px;color:var(--sub)}
+.good .meta strong{color:var(--ink);font-weight:700}
+.good p{font-size:20px;line-height:1.75;text-wrap:balance}
+.good p b{white-space:nowrap;font-weight:700;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.good .grow{grid-column:1 / -1;padding-top:32px;border-top:1px solid var(--line)}
+.good .grow .step{display:grid;grid-template-columns:72px minmax(0,1fr);gap:4px 16px;align-items:baseline}
+.good .grow .step+.step{margin-top:6px}
+
+/* 上級の目安 */
+.goal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;margin-top:48px}
+.goal li{display:grid;gap:12px;align-content:start;padding-top:20px;border-top:2px solid var(--ink)}
+.goal h3{font-size:21px;font-weight:900;line-height:1.5}
+.goal p{font-size:16px;color:var(--sub)}
+
+/* 穴 */
+.hole{display:grid;grid-template-columns:minmax(0,1fr);gap:40px}
+.hole-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px 24px;align-items:baseline}
+.hole-head>:not(.hole-no):not(h2){grid-column:1 / -1;max-width:46em}
+.hole-no{font-size:72px;font-weight:900;line-height:1;letter-spacing:-.03em}
+.hole-head h2{font-size:clamp(26px,3.4vw,38px);font-weight:900;line-height:1.35}
+.hole-head .rule{font-size:17px;font-weight:500}
+.hole-head .count{font-size:14px;color:var(--sub)}
+.hole-body{display:grid;grid-template-columns:minmax(0,1fr);gap:48px;min-width:0}
+.box{min-width:0}
+
+.ex li{display:grid;grid-template-columns:64px minmax(0,1fr);gap:16px;padding-block:14px;border-bottom:1px solid var(--line)}
+.ex li:first-child{padding-top:0}
+.ex time{font-size:14px;color:var(--sub);padding-top:6px}
+.ex .said{font-size:21px;line-height:1.75}
+.ex .note{font-size:15px;color:var(--sub);margin-top:2px}
+s{color:var(--sub);text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px}
+ins{color:var(--red);font-weight:700;text-decoration:none}
+
+.box h3{font-size:15px;font-weight:700;color:var(--sub);letter-spacing:.08em;margin-bottom:14px}
+.box p+p,.box p+.tbl,.box .tbl+p{margin-top:14px}
+.tbl{overflow-x:auto}
+.tbl table{border-collapse:collapse;width:100%;font-size:17px}
+.tbl.wide table{min-width:480px}
+.tbl.wide th,.tbl.wide td{white-space:nowrap}
+.tbl th,.tbl td{text-align:left;padding:10px 20px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font-size:14px;font-weight:700;color:var(--sub)}
+.tbl td:first-child{font-weight:700}
+.chain{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;font-size:19px}
+.chain .arr{color:var(--sub)}
+.chain small{display:block;font-size:13px;color:var(--sub);line-height:1.4}
+.chain span{display:inline-grid}
+.chain .last{color:var(--red);font-weight:700}
+
+.try ol{display:grid;gap:18px;counter-reset:t}
+.try li{display:grid;grid-template-columns:32px minmax(0,1fr);gap:8px;font-size:19px;counter-increment:t}
+.try li::before{content:counter(t);font-family:var(--font-mono);font-weight:500;color:var(--sub);font-size:15px;padding-top:4px}
+.blank{display:inline-block;min-width:4.5em;border-bottom:2px solid var(--ink);margin-inline:4px;transform:translateY(-4px)}
+.blank.s{min-width:2em}
+.try .hint{display:block;font-size:15px;color:var(--sub);margin-top:2px}
+
+/* 組み合わせ */
+.pairs{margin-top:40px}
+.pairs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 200px;gap:24px;padding-block:16px;border-bottom:1px solid var(--line);align-items:baseline}
+.pairs .from{font-size:19px}
+.pairs .to{font-size:19px;color:var(--red);font-weight:700}
+.pairs .when{font-size:14px;color:var(--sub)}
+.pairs .head{font-size:14px;color:var(--sub);font-weight:700;padding-top:0}
+.pairs .head span{font-size:14px;color:var(--sub);font-weight:700}
+
+/* その */
+.sono{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:72px;margin-top:48px;align-items:end}
+.big{display:flex;align-items:baseline;gap:8px}
+.big b{font-size:132px;font-weight:900;line-height:.85;letter-spacing:-.04em}
+.big span{font-size:26px;font-weight:900}
+.sono .cap{margin-top:20px;font-size:17px}
+.sono .cap strong{font-weight:900}
+.chart{overflow-x:auto}
+.chart-in{position:relative;min-width:640px;padding-right:64px}
+.bars{position:relative;display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:10px;height:240px;align-items:end;border-bottom:2px solid var(--ink)}
+.bar{position:relative;height:calc(var(--v) / 60 * 100%);background:var(--ink)}
+.bar span{position:absolute;bottom:100%;left:0;right:0;text-align:center;font-size:14px;font-weight:700;padding-bottom:4px}
+.tline{position:absolute;left:0;right:-64px;bottom:calc(3.1 / 60 * 100%);border-top:2px dashed var(--red);z-index:1}
+.tline span{position:absolute;right:0;bottom:4px;font-size:14px;font-weight:700;color:var(--red)}
+.dates{margin-right:0;display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:10px;margin-top:8px}
+.dates span{white-space:nowrap;text-align:center;font-size:13px;color:var(--sub)}
+.chart figcaption{font-size:14px;color:var(--sub);margin-top:16px}
+.sono-tip{max-width:36em;margin-top:56px;font-size:18px}
+
+.hang{text-indent:-.5em}
+.hang1{text-indent:-.5em}
+.nw{white-space:nowrap}
+.paren{white-space:nowrap;letter-spacing:0}
+.tbl.even td:first-child{font-weight:400}
+.good .grow time{font-size:14px;color:var(--sub)}
+.sen{display:inline-block;max-width:100%}
+footer{padding-block:56px 80px;border-top:1px solid var(--line);font-size:14px;color:var(--sub)}
+footer p+p{margin-top:6px}
+
+@media (max-width:1100px){
+  .good{grid-template-columns:minmax(0,1fr);gap:28px}
+}
+@media (max-width:900px){
+  .goal{grid-template-columns:minmax(0,1fr);gap:28px}
+  .sono{grid-template-columns:minmax(0,1fr);gap:40px}
+  .pairs li{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .pairs .when{grid-column:1 / -1;margin-top:-12px}
+  .pairs .head .h3{display:none}
+}
+@media (max-width:640px){
+  .wrap{padding-inline:20px}
+  .hero{padding-block:64px 48px}
+  .hero .lead{font-size:17px}
+  .facts{gap:12px 28px}
+  .facts b{font-size:28px}
+  section{padding-block:64px}
+  .good{grid-template-columns:minmax(0,1fr);gap:32px}
+  .good p{font-size:18px}
+  .good .grow .step{grid-template-columns:minmax(0,1fr);gap:0}
+  .hole-no{font-size:52px}
+  .ex li{grid-template-columns:minmax(0,1fr);gap:2px}
+  .ex time{padding-top:0}
+  .ex .said{font-size:19px}
+  .try li{font-size:17px;grid-template-columns:24px minmax(0,1fr)}
+  .chain{font-size:17px}
+  .pairs li{grid-template-columns:minmax(0,1fr);gap:2px}
+  .pairs .when{margin-top:0}
+  .pairs .head{display:none}
+  .big b{font-size:104px}
+}
+</style>
+
+<div lang="ja">
+<header class="hero">
+  <div class="wrap">
+    <p class="who">10月4日の​レッスンで​聞かれた​ことへの​答え</p>
+    <h1>文法の​穴5つ</h1>
+    <p class="lead"><span class="sen">7月5日から​10月4日までの​11回分の​レッスンを、​字幕で​全部​見直しました。</span><span class="sen">​その​中で​何度も​出てきた​文法の​間​違いを​5つ​選んでいます。</span><span class="sen">​どれも、​ルールを​1つ​覚えれば​直せます。</span></p>
+    <p class="en">I read the captions of all 11 lessons (Jul 5 to Oct 4) and picked the 5 grammar mistakes you repeat most. Each one is fixed by learning a single rule.</p>
+    <div class="facts num">
+      <div><b>11</b><span>回のレッスン</span></div>
+      <div><b>2,057</b><span>回の発言を確認</span></div>
+      <div><b>5</b><span>つの穴</span></div>
+    </div>
+    <nav class="toc" aria-label="5つの穴">
+      <a href="#h1"><span class="n">1</span>「だ」「して」</a>
+      <a href="#h2"><span class="n">2</span>まだ〜ていません</a>
+      <a href="#h3"><span class="n">3</span>自動詞と他動詞</a>
+      <a href="#h4"><span class="n">4</span>させられる</a>
+      <a href="#h5"><span class="n">5</span>に・で・を</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section id="good">
+  <div class="wrap">
+    <h2 class="sec-h">もう​使えている​文法</h2>
+    <p class="sec-lead">N2で​出る​文法も、​会話の​中で​ちゃんと​使えています。</p>
+    <ul class="good">
+      <li>
+        <p class="meta"><time class="mono">9/9</time><strong>〜は​ずなんですけど​／〜てしまいました</strong></p>
+        <p>確かに​イベントが​あった<b>は​ずなんですけど</b>、​その​名前を​忘れて<b>しまいました</b>。</p>
+      </li>
+      <li>
+        <p class="meta"><time class="mono">9/23</time><strong>必ずしも​〜わけではない</strong></p>
+        <p>上級の​生徒は​みんな​N1を​持っていますか？​それとも​<b>必ずしも</b><wbr>​<b>そういうわけではない</b>んですか？</p>
+      </li>
+      <li>
+        <p class="meta"><time class="mono">8/9</time><strong>〜ない​限り</strong></p>
+        <p>食べ物が​腐って<b>ない​限り</b>、​何でも​構わない。</p>
+      </li>
+      <li>
+        <p class="meta"><time class="mono">10/4</time><strong>〜の​せいで​／〜てしまう</strong></p>
+        <p>雪が​ひどく、​<b>そのせいで</b>​公共交通機関が​止まって<b>しまう</b>​場合も​結構​多いですよね。</p>
+      </li>
+      <li>
+        <p class="meta"><time class="mono">7/25</time><strong>謙譲語</strong></p>
+        <p>ユウキ先生に​個人的に​<b>伺いたい</b>ことがありますが。</p>
+      </li>
+      <li>
+        <p class="meta"><time class="mono">8/16</time><strong>自分で​言い直せた</strong></p>
+        <p><span class="nw">「ど</span>んどん​暖かくなるの<span class="nw">で」</span>と​言った​あと、​自分で​<span class="nw">「ど</span>んどん​暖かく<b>なっているので</b>」と​言い​直しました。</p>
+      </li>
+      <li class="grow">
+        <p class="meta"><strong>8/23に​聞いた​言葉を、​9/23に​使えた</strong></p>
+        <div class="step"><time class="mono">8/23</time><p><span class="nw">「もどかしい」</span>と​<span class="nw">「おかしい」、</span>​どちらが​正しいですか？と​先生に​聞きました。</p></div>
+        <div class="step"><time class="mono">9/23</time><p>自分も​よく​知らない​状態なので、​それが​ちょっと<b>も​どかしい</b>と​思います。</p></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section id="goal">
+  <div class="wrap">
+    <h2 class="sec-h">上級に​上がる​ための​目標</h2>
+    <p class="en sec-lead">What advanced speakers can do: keep work talk going for 10 minutes in Japanese, paraphrase when a word is missing, and fix their own mistakes before being asked.</p>
+    <ol class="goal">
+      <li>
+        <h3>仕事の​話を、​英語に​切り替えずに​10分話せる</h3>
+        <p>仕事の​内容を、​日本語だけで​説明できる​状態です。</p>
+      </li>
+      <li>
+        <h3>言葉が​出て​こない​時、​別の​日本語で​言い換えられる</h3>
+        <p><span class="sen">9/16は​<span class="nw">「geyser」</span>を​英語で​言っていました。</span><span class="sen">​<span class="nw">「お</span>湯が​地面から​吹き出す<span class="nw">所」</span>と​言えれば、​日本語の​まま​話を​続けられます。</span></p>
+      </li>
+      <li>
+        <h3>間​違えたら、​すぐ​自分で​言い直せる</h3>
+        <p><span class="sen">この​ページの​5つは、​その​練習用です。</span><span class="sen">​8/16のように、​言った​あとで​気づければ​大丈夫です。</span></p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section id="h1">
+  <div class="wrap hole">
+    <div class="hole-head">
+      <p class="hole-no num">1</p>
+      <h2><span class="nw">「だ」</span>と​<span class="nw">「して」</span>を​足さない</h2>
+      <p class="rule"><span class="sen">動詞と​い形容詞は、​普通形の​まま​<span class="nw">「し」</span>​<span class="nw">「から」</span>​<span class="nw">「と思う」</span>に​つなげます。</span><span class="sen">​あいだに​<span class="nw">「だ」</span>​<span class="nw">「です」</span>​<span class="nw">「して」</span>は​入りません。</span></p>
+      <p class="en">Plain-form verbs and い​-adjectives are already complete. Don't add だ, です or して after them.</p>
+      <p class="count num">7/5から​10/4までに、​少なくとも​9回</p>
+    </div>
+    <div class="hole-body">
+      <ol class="ex">
+        <li><time class="mono">7/25</time><p class="said">南極から​近い<s>だ</s>から、</p></li>
+        <li><time class="mono">8/9</time><p class="said">話すスピードは、​ちょっと​聞き取りにくい<s>だ</s>と​思います。</p></li>
+        <li><time class="mono">9/16</time><p class="said">日本にも​よく​行く<s>して</s><ins>し</ins>、</p></li>
+        <li><time class="mono">9/23</time><p class="said">安定している​職場が​ある​<s>して</s><ins>し</ins>、</p></li>
+        <li><time class="mono">7/18</time><p class="said">どうして​1日暇だと​思う<ins>ん</ins>ですか？</p></li>
+        <li><time class="mono">8/16</time><p class="said">外国人が​確かに​多<s>い</s>すぎると</p></li>
+        <li><time class="mono">7/5</time><p class="said">1週間ずっと​元気<s>だったです</s><ins>でした</ins>。</p></li>
+      </ol>
+      <div class="box">
+        <h3>なぜ</h3>
+        <p><span class="sen"><span class="nw">「だ」</span>が​付くのは、​な形容詞と​名詞だけです。</span><span class="sen">​9/9には​<span class="nw">「多かった」</span>と​<span class="nw">「多いでした」</span>の​どちらが​正しいか、​先生に​聞いていました。</span><span class="sen">​正しいのは​<span class="nw">「多かったです」</span>です。</span><span class="sen">​い形容詞の​過去形は、​<span class="nw">「い」</span>を​<span class="nw">「かった」</span>に​変えて​作ります。</span></p>
+        <div class="tbl wide">
+          <table class="num">
+            <thead><tr><th>つなぐ​形</th><th>動詞</th><th>い​形容詞</th><th>な​形容詞・名詞</th></tr></thead>
+            <tbody>
+              <tr><td>〜し</td><td>行くし</td><td>多いし</td><td>静か<ins>だ</ins>し</td></tr>
+              <tr><td>〜から</td><td>行くから</td><td>近いから</td><td>静か<ins>だ</ins>から</td></tr>
+              <tr><td>〜んです</td><td>思うんです</td><td>近いんです</td><td>静か<ins>な</ins>んです</td></tr>
+              <tr><td>過去の​丁寧形</td><td>行きました</td><td>多かったです</td><td>静かでした</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="box try">
+        <h3>練習</h3>
+        <ol>
+          <li><p><span class="nw">「ニ</span>ュージーランドは​物価が​高いだから、​外食は​あまりしませ<span class="nw">ん。」</span>を​直してください。</p></li>
+          <li><p><span class="nw">「先</span>週は​仕事が​忙しいでし<span class="nw">た。」</span>を​直してください。</p></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="h2">
+  <div class="wrap hole">
+    <div class="hole-head">
+      <p class="hole-no num">2</p>
+      <h2 class="hang"><span class="nw">「まだ」</span>の​あとは<span class="nw">​<span class="nw">「〜ていません」</span></span></h2>
+      <p class="rule"><span class="sen"><span class="nw">「まだしていない」</span>は、​今も​その​状態が​続いていると​いう​意味です。</span><span class="sen">​なので<span class="nw">​<span class="nw">「〜ていない」</span></span><span class="nw">​<span class="nw">「〜ていません」</span></span>を​使います。</span></p>
+      <p class="en">"Not yet" is a state that continues now, so Japanese uses 〜ていない​. Korean <span class="nw">아직 안 했어요</span> is past tense, which makes this one easy to copy by mistake.</p>
+      <p class="count num">7/25から​10/4までに、​少なくとも​5回</p>
+    </div>
+    <div class="hole-body">
+      <ol class="ex">
+        <li><time class="mono">7/25</time><div><p class="said">まだ​決め<s>ています</s><ins>ていません</ins>。</p><p class="note">先生の​<span class="nw">「ま</span>だ​決めて​ないんです<span class="nw">ね」</span>への​返事</p></div></li>
+        <li><time class="mono">8/23</time><p class="said">まだ​終わっ<s>た</s><ins>ていない</ins>んですけど。</p></li>
+        <li><time class="mono">9/9</time><p class="said">まだ​見<s>なかった</s><ins>ていない</ins>ので。</p></li>
+        <li><time class="mono">10/4</time><p class="said">まだ​予約<s>しませんでした</s><ins>していません</ins>。</p></li>
+        <li><time class="mono">10/4</time><p class="said">順番は​<ins>まだ</ins>​決め<s>なかった</s><ins>ていない</ins>んです。</p></li>
+      </ol>
+      <div class="box">
+        <h3>なぜ</h3>
+        <p><span class="nw">「しませんでした」</span>を​使うのは、​昨日や​先週など、​もう​終わった​時間の​話を​する​時です。</p>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>聞かれた​こと</th><th>答え</th></tr></thead>
+            <tbody>
+              <tr><td>もう​予約しましたか？</td><td>いいえ、​まだ​予約<ins>していません</ins>。</td></tr>
+              <tr><td>昨日、​予約しましたか？</td><td>いいえ、​昨日は​予約しませんでした。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="box try">
+        <h3>練習</h3>
+        <ol>
+          <li><p><span class="sen"><span class="nw">「も</span>う​新しい​巻、​読みました<span class="nw">か？」</span>と​聞かれました。</span><span class="sen">​読んでいない​時の​答えは？<span class="hint">​いいえ、​まだ<span class="blank"></span>。</span></span></p></li>
+          <li><p><span class="nw">「映</span>画は​まだ​見なかったので、​話せませ<span class="nw">ん。」</span>を​直してください。</p></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="h3">
+  <div class="wrap hole">
+    <div class="hole-head">
+      <p class="hole-no num">3</p>
+      <h2>自動詞と​他動詞</h2>
+      <p class="rule"><span class="sen">物が​自然に​そうなる​時は​<span class="nw">「が」</span>と​自動詞、​人が​何かを​する​時は​<span class="nw">「を」</span>と​他動詞を​使います。</span><span class="sen">​助詞を​先に​決めると、​動詞も​選びやすくなります。</span></p>
+      <p class="en">が goes with intransitive verbs (it happens), を with transitive verbs (someone does it). Choose the particle first and the verb follows.</p>
+      <p class="count num">7/5から​10/4までに、​少なくとも​6回</p>
+    </div>
+    <div class="hole-body">
+      <ol class="ex">
+        <li><time class="mono">7/5</time><p class="said">席料が​含<s>め</s><ins>まれ</ins>ていないので、</p></li>
+        <li><time class="mono">7/18</time><p class="said">免許を​日本の​免許に​変<s>わった</s><ins>えた</ins>。</p></li>
+        <li><time class="mono">8/2</time><p class="said">お金<s>が</s><ins>を</ins>​かけていない。</p></li>
+        <li><time class="mono">8/23</time><p class="said"><span class="nw">（イ</span>ベント<span class="nw">は）</span>​昨日から​始<s>めて</s>​<ins>まって</ins>、​9月まで。</p></li>
+        <li><time class="mono">9/16</time><p class="said">家を​建<s>って</s><ins>て</ins>る​前に、</p></li>
+        <li><time class="mono">10/4</time><div><p class="said">予定は​少し​ずつ​整<s>う</s><ins>えた</ins>​方が​いいと​思う。</p><p class="note">先生が​その​場で​<span class="nw">「整える」</span>と​直しました</p></div></li>
+      </ol>
+      <div class="box">
+        <h3>なぜ</h3>
+        <p><span class="sen">ペアで​覚えてください。</span><span class="sen">​左の​列は​<span class="nw">「が」、</span>​右の​列は​<span class="nw">「を」</span>と​一緒に​使います。</span></p>
+        <div class="tbl even">
+          <table>
+            <thead><tr><th>が​<span class="nw">（自</span>動<span class="nw">詞）</span></th><th>を​<span class="nw">（他</span>動<span class="nw">詞）</span></th></tr></thead>
+            <tbody>
+              <tr><td>イベントが​始まる</td><td>イベントを​始める</td></tr>
+              <tr><td>予定が​変わる</td><td>予定を​変える</td></tr>
+              <tr><td>家が​建つ</td><td>家を​建てる</td></tr>
+              <tr><td>準備が​整う</td><td>準備を​整える</td></tr>
+              <tr><td>お金が​かかる</td><td>お金を​かける</td></tr>
+              <tr><td>席料が​含まれる</td><td>席料を​含める</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="box try">
+        <h3>練習</h3>
+        <ol>
+          <li><p>会議は​10時に​<span class="nw">（始</span>まります​／始めま<span class="nw">す）。</span></p></li>
+          <li><p>旅行の​予定を​少し​ずつ​<span class="nw">（整</span>って​／整え<span class="nw">て）</span>います。</p></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="h4">
+  <div class="wrap hole">
+    <div class="hole-head">
+      <p class="hole-no num">4</p>
+      <h2 class="hang"><span class="nw">「させられる」</span>と​<span class="nw">「思われる」</span></h2>
+      <p class="rule"><span class="sen"><span class="nw">「させられる」</span>は、​したくないのにさせられた​時に​使います。</span><span class="sen">​自分の​考えを​言う​時は​<span class="nw">「思う」</span>を​使ってください。</span></p>
+      <p class="en">させられる means you were made to do something you didn't want to do. For your own opinion, say 思う​, not 思われる​.</p>
+      <p class="count num">8/9と​9/9に、​少なくとも​5回</p>
+    </div>
+    <div class="hole-body">
+      <ol class="ex">
+        <li><time class="mono">9/9</time><div><p class="said">奴隷のように​<s>働けさせる</s>​<ins>働かされる</ins>。</p><p class="note">先生が​<span class="nw">「働かされすぎてね」</span>と​言い​直しました</p></div></li>
+        <li><time class="mono">9/9</time><p class="said">日本も​韓国も、​社員が​<s>死なせる</s>​<ins>死ぬ​ほど​働かされる</ins>。</p></li>
+        <li><time class="mono">9/9</time><p class="said">声を​あまり​出さなかったので、​レッスンしても​あまり​良くないと​思<s>われ</s><ins>っ</ins>て。</p></li>
+        <li><time class="mono">8/9</time><p class="said">日本人が​実際に​話す日本語は、​結構​違うと​思<s>われている</s><ins>う</ins>ので。</p></li>
+        <li><time class="mono">9/9</time><div><p class="said">抽選<s>された</s><ins>に​当たった</ins>。</p><p class="note"><span class="nw">「当選した」</span>とも​言えます</p></div></li>
+      </ol>
+      <div class="box">
+        <h3>なぜ</h3>
+        <p>使役の​形に​受身の​<span class="nw">「られる」</span>を​付けると、​使役受身に​なります。</p>
+        <p class="chain"><span>働く</span><span class="arr">​→</span><span>働かせる</span><span class="arr">​→</span><span>働かせられる</span><span class="arr">​→</span><span class="last">働かされる</span></p>
+        <p class="en">work → make someone work → be made to work → the short form used in speech</p>
+        <p><span class="sen"><span class="nw">「働く・待つ・飲む」</span>のような​動詞は、​<span class="nw">「働</span>かされる​・​待たされる​・​飲まされ<span class="nw">る」</span>と​短く​できます。</span><span class="sen">​<span class="nw">「食べる・見る」</span>は​短くならず、​<span class="nw">「食</span>べさせられる​・見させられ<span class="nw">る」</span>です。</span></p>
+        <p><span class="nw">「〜と思われる」</span>は、​多くの​人が​そう​考えている​時に​使う形で、​ニュースや​論文に​よく​出てきます。</p>
+      </div>
+      <div class="box try">
+        <h3>練習</h3>
+        <ol>
+          <li><p><span class="nw">「上</span>司が​私に​週末も​働かせ<span class="nw">た。」</span>を、​<span class="nw">「私は」</span>で​始めて​言ってください。</p></li>
+          <li><p><span class="sen">子どもの​ころ、​毎日​ピアノを<span class="blank"></span>。</span><span class="sen"><span class="hint">​<span class="nw">「練習する」</span>を​使って、​いやだった​気持ちで​言ってください。</span></span></p></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="h5">
+  <div class="wrap hole">
+    <div class="hole-head">
+      <p class="hole-no num">5</p>
+      <h2 class="hang1"><span class="nw">「に」</span>​<span class="nw">「で」</span>​<span class="nw">「を」</span>の​使い分け</h2>
+      <p class="rule"><span class="sen"><span class="nw">「ある」</span>​<span class="nw">「いる」</span>には​<span class="nw">「に」、</span>​動作には​<span class="nw">「で」</span>を​使います。</span><span class="sen">​<span class="nw">「予約する」</span>​<span class="nw">「参加する」</span>​<span class="nw">「休む」</span>は、​助詞と​セットで​覚えてください。</span></p>
+      <p class="en">Use に with ある and いる​, and で with actions. Some verbs come with a fixed particle: を​予約する​, に​参加する​, を​休む.</p>
+      <p class="count num">7/25から​10/4までに、​少なくとも​5回</p>
+    </div>
+    <div class="hole-body">
+      <ol class="ex">
+        <li><time class="mono">10/4</time><p class="said">立川<s>で</s><ins>に</ins>​大きな​公園が​あるんです。</p></li>
+        <li><time class="mono">7/25</time><p class="said">1年の​中<s>に</s><ins>で</ins>​一番いい​季節は​夏だと​思います。</p></li>
+        <li><time class="mono">8/16</time><p class="said">普通の​ホテル<s>に</s><ins>を</ins>​予約しておいたんですけど。</p></li>
+        <li><time class="mono">8/16</time><p class="said">韓国では、​イベント<s>を</s><ins>に</ins>​参加する​ためには、</p></li>
+        <li><time class="mono">9/9</time><p class="said">仕事<s>から</s><ins>を</ins>​ちょっと​休む​予定は​ないんですよ。</p></li>
+      </ol>
+      <div class="box">
+        <h3>なぜ</h3>
+        <div class="tbl">
+          <table>
+            <thead><tr><th>形</th><th>例</th></tr></thead>
+            <tbody>
+              <tr><td>〜<ins>に</ins>​ある​・いる</td><td>渋谷に​公園が​ある</td></tr>
+              <tr><td>〜<ins>で</ins>​何かを​する</td><td>渋谷で​友だちと​会う</td></tr>
+              <tr><td>〜の​中<ins>で</ins>​一番</td><td>1年の​中で​一番​好き</td></tr>
+              <tr><td>〜<ins>を</ins>​予約する</td><td>ホテルを​予約する</td></tr>
+              <tr><td>〜<ins>に</ins>​参加する</td><td>イベントに​参加する</td></tr>
+              <tr><td>〜<ins>を</ins>​休む</td><td>仕事を​休む</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="box try">
+        <h3>練習</h3>
+        <ol>
+          <li><p><span class="sen">渋谷<span class="paren">​（　　）</span>​新しい​カフェが​あります。</span><span class="sen">​その​カフェ<span class="paren">​（　　）</span>​友だちと​会いました。</span></p></li>
+          <li><p>来月の​イベント<span class="paren">​（　　）</span>​参加するので、​金曜日は​仕事<span class="paren">​（　　）</span>​休みます。</p></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pairs">
+  <div class="wrap">
+    <h2 class="sec-h">セットで​覚える​言い方</h2>
+    <p class="sec-lead"><span class="sen">文法は​正しくても、​言葉の​組み合わせが​不自然な​例です。</span><span class="sen">​2回以上​出てきた​ものを​中心に​選びました。</span></p>
+    <ul class="pairs">
+      <li class="head"><span>言ったこと</span><span>自然な言い方</span><span class="h3">いつ</span></li>
+      <li><span class="from">傾向が多い</span><span class="to">傾向がある・傾向が強い</span><span class="when num">7/5・8/2・10/4　4回</span></li>
+      <li><span class="from">おすすめます</span><span class="to">おすすめします</span><span class="when num">7/18に3回・8/23</span></li>
+      <li><span class="from">どうなるか知りません</span><span class="to">どうなるかわかりません</span><span class="when num">7/18に2回・8/9</span></li>
+      <li><span class="from">相手に向けの配慮</span><span class="to">相手への配慮</span><span class="when num">8/9に2回・8/23</span></li>
+      <li><span class="from">可能性が多い</span><span class="to">可能性が高い</span><span class="when num">8/16</span></li>
+      <li><span class="from">執着が高い</span><span class="to">こだわりが強い</span><span class="when num">8/9</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="sono">
+  <div class="wrap">
+    <h2 class="sec-h hang"><span class="nw">「その」</span>の​数</h2>
+    <div class="sono">
+      <div>
+        <p class="big num"><b>38</b><span>回</span></p>
+        <p class="cap"><span class="sen">1,000文字話すごとの​<span class="nw">「その」</span>の​数です。</span><span class="sen">​先生は​<strong class="num">3回</strong>です。</span><span class="sen">​だいたい​1回話すたびに、​1回​<span class="nw">「その」</span>が​入っています。</span></p>
+        <p class="en" style="margin-top:12px">"​その​" per 1,000 characters you spoke. Your teacher: 3.</p>
+      </div>
+      <figure class="chart" style="margin:0">
+        <div class="chart-in">
+          <div class="bars num" role="img" aria-label="レッスンごとの「その」の数。1,000文字あたり。7月5日36、7月18日39、7月25日27、8月2日37、8月9日26、8月16日36、8月23日41、9月9日43、9月16日41、9月23日52、10月4日37。先生は3。">
+            <div class="tline"><span>先生 3</span></div>
+            <div class="bar" style="--v:35.6"><span>36</span></div>
+            <div class="bar" style="--v:38.5"><span>39</span></div>
+            <div class="bar" style="--v:27.1"><span>27</span></div>
+            <div class="bar" style="--v:37.1"><span>37</span></div>
+            <div class="bar" style="--v:26.1"><span>26</span></div>
+            <div class="bar" style="--v:36.3"><span>36</span></div>
+            <div class="bar" style="--v:40.7"><span>41</span></div>
+            <div class="bar" style="--v:43.3"><span>43</span></div>
+            <div class="bar" style="--v:41.4"><span>41</span></div>
+            <div class="bar" style="--v:52.4"><span>52</span></div>
+            <div class="bar" style="--v:36.5"><span>37</span></div>
+          </div>
+          <div class="dates mono" aria-hidden="true"><span>7/5</span><span>7/18</span><span>7/25</span><span>8/2</span><span>8/9</span><span>8/16</span><span>8/23</span><span>9/9</span><span>9/16</span><span>9/23</span><span>10/4</span></div>
+        </div>
+        <figcaption><span class="sen">レッスンごと、​1,000文字あたり。</span><span class="sen">​自動字幕で​数えたので、​だいたいの​数です。</span><span class="sen">​<span class="nw">「そのまま」</span>​<span class="nw">「その後」</span>などは​数えていません。</span></figcaption>
+      </figure>
+    </div>
+    <p class="sono-tip"><span class="sen">言葉を​探している​時は、​<span class="nw">「その」</span>と​言わずに​少し​黙っても​大丈夫です。</span><span class="sen">​日本語の​会話では、​短い​間​<span class="nw">（ま</span>）は​よく​あります。</span></p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><span class="sen">例文は​レッスンの​自動字幕から​取りました。</span><span class="sen">​読みやすく​する​ため、​例文の​中の​<span class="nw">「その」</span>は​外しています。</span><span class="sen">​聞き取りミスらしい​部分は​使っていません。</span></p>
+    <p class="num">2026年10月4日　ユウキ先生の​レッスンより</p>
+  </div>
+</footer>
+</div>
+
+</body>
+</html>
